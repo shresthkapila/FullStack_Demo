@@ -1,17 +1,18 @@
 const express = require('express')
 const path = require('path')
+var cors = require('cors') //cross-origin resource sharing
 const PORT = process.env.PORT || 5000
 
 const { Pool } = require('pg');
 var pool;
 pool = new Pool({
-  // connectionString: 'postgres://postgres:Munish@1998@localhost/users'
-  connectionString: process.env.DATABASE_URL
+  connectionString: process.env.DATABASE_URL || 'postgres://postgres:Munish@1998@localhost/users'
 })
 
 var app = express();
 
 app.use(express.json());
+app.use("/", cors());
 app.use(express.urlencoded({extended:false}));
 
 app.use(express.static(path.join(__dirname, 'public')));
@@ -34,7 +35,14 @@ app.post('/adduser',(req,res)=>{
   console.log("post request for /adduser");
   var uname = req.body.uname;
   var age = req.body.age;
-  res.send(`username: ${uname}, age: ${age}`);
+  adduser_query = `...`; // `INSERT INTO usr (fname,age) VALUES ('${uname}', ${age})`;
+  pool.query(adduser_query, (error,results)=> {
+    us = [];
+    ob = {'n': uname, 'a': age};
+    us.push(ob);
+    res.json(us);
+  });
+  // res.send(`username: ${uname}, age: ${age}`);
 });
 app.get('/users/:id', (req,res)=> {
   var uid = req.params.id
@@ -44,3 +52,5 @@ app.get('/users/:id', (req,res)=> {
 });
 
 app.listen(PORT, () => console.log(`Listening on ${ PORT }`));
+
+module.exports = app;

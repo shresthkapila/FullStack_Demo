@@ -11,8 +11,12 @@
     "test": "node test.js"
   },
   "dependencies": {
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
+    "cors": "^2.8.5",
     "ejs": "^2.7.4",
     "express": "^4.17.1",
+    "mocha": "^8.0.1",
     "pg": "^8.2.1"
   },
   "devDependencies": {
